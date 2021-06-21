@@ -14,6 +14,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+Route::prefix('tenants/')->namespace('App\Http\Controllers')->group(function () {
+    // Route::group(['middleware' => ['subdomain']], function () {
+        Route::get('', 'TenantController@getAllTenants')->name('getAllTenantsApi');
+        Route::post('', 'TenantController@createTenant')->name('createTenantApi');
+        Route::put('{id}', 'TenantController@updateTenant')->name('updateTenantApi');
+        Route::delete('{id}', 'TenantController@deleteTenant')->name('deleteTenantApi');
+    // });
+});
+
+
+Route::prefix('users/')->namespace('App\Http\Controllers')->group(function () {
+
+    Route::prefix('auth/')->group(function () {
+        Route::post('login', 'UsersController@loginUser')->name('loginUserApi');
+    });
+
+    Route::post('', 'UsersController@createUser')->name('createUserApi');
+    Route::get('', 'UsersController@getAllUsers')->name('getAllUsersApi');
+    Route::put('{id}', 'UsersController@updateUser')->name('updateUserApi');
+    Route::delete('{id}', 'UsersController@deleteUser')->name('deleteUserApi');
 });
